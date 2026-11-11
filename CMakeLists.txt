@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.16)
+project(ClinicQt VERSION 1.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Sql PrintSupport)
+add_executable(ClinicQt main.cpp database.cpp window.cpp)
+qt_add_resources(ClinicQt clinic_branding
+    PREFIX "/"
+    FILES branding/heartbeat-h.png
+)
+if(WIN32)
+    enable_language(RC)
+    target_sources(ClinicQt PRIVATE branding/clinic.rc)
+    target_include_directories(ClinicQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/branding")
+endif()
+target_link_libraries(ClinicQt PRIVATE Qt6::Widgets Qt6::Sql Qt6::PrintSupport)
+if(MSVC)
+ target_compile_options(ClinicQt PRIVATE /W4)
+else()
+ target_compile_options(ClinicQt PRIVATE -Wall -Wextra -Wpedantic)
+endif()
